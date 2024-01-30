@@ -6,31 +6,40 @@ const startPauseBt = document.querySelector('#start-pause')
 const banner = document.querySelector('.app__image')
 const title = document.querySelector('.app__title')
 const buttons = document.querySelectorAll('.app__card-button')
+const startPauseText = document.querySelector('#start-pause span')
+const startPauseIcon = document.querySelector('.app__card-primary-butto-icon')
+const startIcon = new Image('../assets/img/play_arrow.png')
+const pauseIcon = new Image('../assets/img/pause.png')
 const musicInput = document.querySelector('#alternar-musica')
 const musica = new Audio('../assets/sounds/luna-rise-part-one.mp3')
 const soundForPlay = new Audio('../assets/sounds/play.wav')
 const soundForPause = new Audio('../assets/sounds/pause.mp3')
 const soundWhenFinish = new Audio('../assets/sounds/beep.mp3')
+const timer = document.querySelector('#timer')
 
-let tempOnSec = 50
+let tempOnSec = 1500
 let intervalId = null
 
 focoBt.addEventListener('click', () => {
+    tempOnSec = 1500
     alterarContexto('foco')
     focoBt.classList.add('active')
 })
 
 curtoBt.addEventListener('click', () => {
+    tempOnSec = 300
     alterarContexto('descanso-curto')
     curtoBt.classList.add('active')
 }) 
 
 longoBt.addEventListener('click', () => {
+    tempOnSec = 900
     alterarContexto('descanso-longo')
     longoBt.classList.add('active')
 })
 
 function alterarContexto(contexto) {
+    showTimer()
     buttons.forEach(contexto => {
         contexto.classList.remove('active')
     });
@@ -63,13 +72,12 @@ musicInput.addEventListener('change', () => {
 
 const contRegressive = () => {
     if (tempOnSec <= 0) {
-        console.log(intervalId)
         soundWhenFinish.play()
         clearCont()
         return
     }
     tempOnSec -= 1
-    console.log('Temporizador ' + tempOnSec)
+    showTimer()
 }
 
 startPauseBt.addEventListener('click', startPauseCont)
@@ -81,10 +89,22 @@ function startPauseCont() {
         return
     }
     soundForPlay.play()
+    startPauseIcon.setAttribute('src', `../assets/img/pause.png`)
+    startPauseText.textContent = "Pausar"
     intervalId = setInterval(contRegressive, 1000)
 }
 
 function clearCont() {
     clearInterval(intervalId)
+    startPauseIcon.setAttribute('src', `../assets/img/play_arrow.png`)
+    startPauseText.textContent = "Iniciar"
     intervalId = null
 }
+
+function showTimer() {
+    const time = new Date(tempOnSec * 1000)
+    const timeFinal = time.toLocaleTimeString('pt-br', {minute: '2-digit', second: '2-digit'})
+    timer.innerHTML = `<h1>${timeFinal}</h1>`
+}
+
+showTimer()
