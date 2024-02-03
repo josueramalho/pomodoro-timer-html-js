@@ -1,14 +1,17 @@
+// Declaração de constantes
 const addTaskBt = document.querySelector('.app__button--add-task')
 const formAddTask = document.querySelector('.app__form-add-task')
 const cancelFormBt = document.querySelector('.app__form-footer__button--cancel')
 const textAreaForm = document.querySelector('.app__form-textarea')
 const ulTasks = document.querySelector('.app__section-task-list')
 
+// Função para adicionar ou atualizar tarefa
 const tasks = JSON.parse(localStorage.getItem('tasks')) || []
 function refreshTasks() {
     localStorage.setItem('tasks', JSON.stringify(tasks))
 }
 
+// Função para inserir tarefa e seus elementos HTML
 function createTask(task) {
     const li = document.createElement('li')
     li.classList.add('app__section-task-list-item')
@@ -22,13 +25,13 @@ function createTask(task) {
     const p = document.createElement('p')
     p.classList.add('app__section-task-list-item-description')
     p.textContent = task.descricao
-
     
     const button = document.createElement('button')
     button.classList.add('app_button-edit')
     const buttonImg = document.createElement('img')
     buttonImg.setAttribute('src', '../assets/img/edit.png')
 
+    // Alterar descrição da tarefa
     button.onclick = () => {
         const newDescription = prompt('Digite o novo nome da tarefa')
         if (newDescription) {
@@ -38,8 +41,7 @@ function createTask(task) {
         }
     }
 
-
-
+    // Inserindo elementos HTML na lista
     button.append(buttonImg)
     li.append(svg)
     li.append(p)
@@ -47,10 +49,12 @@ function createTask(task) {
     return li
 }
 
+// Abrir formulário para inserir nova tarefa
 addTaskBt.addEventListener('click', () => {
     formAddTask.classList.toggle('hidden')
 })
 
+// Enviar dados do formulário, criar nova tarefa e esconder formulário após o processo
 formAddTask.addEventListener('submit', (evento) => {
     evento.preventDefault();
     const task = {
@@ -65,11 +69,13 @@ formAddTask.addEventListener('submit', (evento) => {
     formAddTask.classList.add('hidden')
 })
 
+// Quando botão Cancelar receber click limpar formulário e esconde-lo
 cancelFormBt.addEventListener('click', () => {
     textAreaForm.value = ''
     formAddTask.classList.add('hidden')
 })
 
+// Pegar todas as tarefas no array e inserir na lista para serem visíveis
 tasks.forEach(task => {
     const elementTask = createTask(task)
     ulTasks.append(elementTask)
